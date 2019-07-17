@@ -1,5 +1,6 @@
 const form = document.getElementById('book-form');
 const alert = document.getElementById('alert');
+const bookList = document.getElementById('book-list');
 
 // Book Constructor
 function Book(title, author, isbn) {
@@ -8,9 +9,8 @@ function Book(title, author, isbn) {
   this.isbn = isbn;
 }
 
-// Create UI Prototype
+// Add Book Prototype
 Book.prototype.addNewBook = function() {
-  const bookList = document.getElementById('book-list');
   const row = bookList.insertRow(-1);
   const titleCell = row.insertCell(0);
   const authorCell = row.insertCell(1);
@@ -30,6 +30,12 @@ Book.prototype.addNewBook = function() {
     alert.classList.remove('success');
   }, 3000);
 };
+
+// Remove Book Prototype
+Book.prototype.removeBook = function() {};
+
+// Remove Book Prototype
+Book.prototype.removeBook = function() {};
 
 form.addEventListener('submit', e => {
   const title = document.getElementById('title');
@@ -56,4 +62,12 @@ form.addEventListener('submit', e => {
   }
 
   e.preventDefault();
+});
+
+bookList.addEventListener('click', e => {
+  const tr = e.target.parentElement.parentElement;
+
+  if (tr.tagName == 'TR') {
+    tr.remove();
+  }
 });
