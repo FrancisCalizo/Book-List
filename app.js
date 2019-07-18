@@ -80,5 +80,5 @@ bookList.addEventListener('click', e => {
 
   // Remove Book and Show Alert
   newUI.removeBook(tr);
-  newUI.showAlert('Book removed successfully', 'error');
+  newUI.showAlert('Book removed successfully', 'success');
 });
