@@ -1,5 +1,4 @@
 const form = document.getElementById('book-form');
-const alert = document.getElementById('alert');
 const bookList = document.getElementById('book-list');
 
 // Book Constructor
@@ -9,6 +8,9 @@ function Book(title, author, isbn) {
   this.isbn = isbn;
 }
 
+// UI Constructor
+function UI() {}
+
 // Add Book Prototype
 Book.prototype.addNewBook = function() {
   const row = bookList.insertRow(-1);
@@ -17,48 +19,55 @@ Book.prototype.addNewBook = function() {
   const isbnCell = row.insertCell(2);
   const deleteCell = row.insertCell(3);
 
+  // Populate Table Row
   titleCell.textContent = this.title;
   authorCell.textContent = this.author;
   isbnCell.textContent = this.isbn;
   deleteCell.innerHTML = `<a href="#">X</a>`;
 
-  // Display Success Alert and Remove after 3 Seconds
-  alert.textContent = 'Book Added';
-  alert.className = 'success';
-  setTimeout(() => {
-    alert.textContent = '';
-    alert.classList.remove('success');
-  }, 3000);
+  // Clear Values
+  title.value = '';
+  author.value = '';
+  isbn.value = '';
 };
 
 // Remove Book Prototype
-Book.prototype.removeBook = function() {};
+UI.prototype.removeBook = function(el) {
+  if (el.tagName == 'TR') {
+    el.remove();
+  }
+};
 
-// Remove Book Prototype
-Book.prototype.removeBook = function() {};
+// Alert UI Prototype
+UI.prototype.showAlert = function(alertText, alertClass) {
+  const alert = document.getElementById('alert');
+
+  // Display Alert and Remove after 3 Seconds
+  alert.textContent = alertText;
+  alert.className = alertClass;
+  setTimeout(() => {
+    alert.textContent = '';
+    alert.classList.remove(alertClass);
+  }, 3000);
+};
 
 form.addEventListener('submit', e => {
   const title = document.getElementById('title');
   const author = document.getElementById('author');
   const isbn = document.getElementById('isbn');
 
-  if (title.value != '' && author.value != '' && isbn.value != '') {
-    // Instantiate New Book
-    const newBook = new Book(title.value, author.value, isbn.value);
+  // Instantiate New Book
+  const newBook = new Book(title.value, author.value, isbn.value);
+  // Instantiate New UI
+  const newUI = new UI();
 
+  if (title.value != '' && author.value != '' && isbn.value != '') {
     // Add New Book to List
     newBook.addNewBook();
-    title.value = '';
-    author.value = '';
-    isbn.value = '';
+    newUI.showAlert('Book added successfully', 'success');
   } else {
     // throw error alert
-    alert.textContent = 'Please check your input fields.';
-    alert.className = 'error';
-    setTimeout(() => {
-      alert.textContent = '';
-      alert.classList.remove('error');
-    }, 3000);
+    newUI.showAlert('Please check your inputs', 'error');
   }
 
   e.preventDefault();
@@ -67,7 +76,9 @@ form.addEventListener('submit', e => {
 bookList.addEventListener('click', e => {
   const tr = e.target.parentElement.parentElement;
 
-  if (tr.tagName == 'TR') {
-    tr.remove();
-  }
+  const newUI = new UI();
+
+  // Remove Book and Show Alert
+  newUI.removeBook(tr);
+  newUI.showAlert('Book removed successfully', 'error');
 });
